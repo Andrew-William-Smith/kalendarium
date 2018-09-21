@@ -1,0 +1,1286 @@
+% \iffalse meta-comment
+% !TEX program = pdfLaTeX
+%<*internal>
+\iffalse
+%</internal>
+%<*readme>
+----------------------------------------------------------------
+kalendarium --- Format dates according to the Roman calendar
+E-mail: aws@awsmith.us
+Released under the LaTeX Project Public License v1.3c or later
+See http://www.latex-project.org/lppl.txt
+----------------------------------------------------------------
+
+The kalendarium package formats dates in Latin according to
+classical Roman syntax.
+%</readme>
+%<*internal>
+\fi
+\def\nameofplainTeX{plain}
+\ifx\fmtname\nameofplainTeX\else
+  \expandafter\begingroup
+\fi
+%</internal>
+%<*install>
+\input docstrip.tex
+\keepsilent
+\askforoverwritefalse
+\preamble
+----------------------------------------------------------------
+kalendarium --- Format dates according to the Roman calendar
+E-mail: aws@awsmith.us
+Released under the LaTeX Project Public License v1.3c or later
+See http://www.latex-project.org/lppl.txt
+----------------------------------------------------------------
+
+\endpreamble
+\postamble
+
+Copyright (C) 2018 by Andrew Smith <aws@awsmith.us>
+
+This work may be distributed and/or modified under the
+conditions of the LaTeX Project Public License (LPPL), either
+version 1.3c of this license or (at your option) any later
+version.  The latest version of this license is in the file:
+
+http://www.latex-project.org/lppl.txt
+
+This work is "maintained" (as per LPPL maintenance status) by
+Andrew Smith.
+
+This work consists of the file  kalendarium.dtx
+and the derived files           kalendarium.ins,
+                                kalendarium.pdf and
+                                kalendarium.sty.
+
+\endpostamble
+\usedir{tex/latex/kalendarium}
+\generate{
+  \file{\jobname.sty}{\from{\jobname.dtx}{package}}
+}
+%</install>
+%<install>\endbatchfile
+%<*internal>
+\usedir{source/latex/kalendarium}
+\generate{
+  \file{\jobname.ins}{\from{\jobname.dtx}{install}}
+}
+\nopreamble\nopostamble
+\usedir{doc/latex/kalendarium}
+\generate{
+  \file{README.txt}{\from{\jobname.dtx}{readme}}
+}
+\ifx\fmtname\nameofplainTeX
+  \expandafter\endbatchfile
+\else
+  \expandafter\endgroup
+\fi
+%</internal>
+%<*package>
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{kalendarium}[2018/06/14 1.0 Format dates using the Roman calendar]
+%</package>
+%<*driver>
+\documentclass[full,english]{l3doc}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{amsmath}
+\usepackage[pass]{geometry}
+\usepackage{mathtools}
+\usepackage{mdframed}
+\usepackage{microtype}
+\usepackage{pdflscape}
+\usepackage[scale=0.875]{tgheros}
+\usepackage{tgschola}
+\usepackage{wasysym}
+\usepackage{xcolor}
+
+\usepackage[abbreviate=true,bissextum=false,era=none]{\jobname}
+
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+
+\definecolor{maroon}{HTML}{A40000}
+\definecolor{navy}{HTML}{2929D8}
+\hypersetup{allcolors=maroon,colorlinks=true}
+
+\newmdenv[
+  backgroundcolor=black!10,
+  linecolor=maroon,
+  linewidth=1.5pt,
+  topline=false,
+  rightline=false,
+  bottomline=false
+]{sample}
+
+\newmdenv[
+  frametitlebelowskip=2pt,
+  backgroundcolor=black!10,
+  linecolor=maroon,
+  linewidth=1.5pt,
+  topline=false,
+  rightline=false,
+  bottomline=false,
+  frametitlefont=\sffamily\bfseries,
+  frametitle=Example
+]{example}
+
+\newmdenv[
+  frametitlebelowskip=0pt,
+  backgroundcolor=black!10,
+  linecolor=navy,
+  linewidth=1.5pt,
+  topline=false,
+  rightline=false,
+  bottomline=false,
+  frametitlefont=\sffamily\bfseries,
+  frametitle=Accepted values
+]{accepted}
+
+\def\kalendarium/{\textcolor{maroon}{\sffamily\bfseries kalendarium}}
+\newcommand{\default}[1]{\textcolor{navy}{{\large \bell}\hspace{0.5em}\texttt{#1}}}
+\newcommand{\nondefault}[1]{\textcolor{navy}{\phantom{\large \bell}\hspace{0.5em}\texttt{#1}}}
+\newcommand{\interblocksp}{\vspace{-10pt}}
+
+\begin{document}
+  \DocInput{\jobname.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \GetFileInfo{\jobname.sty}
+%
+% \title{The \kalendarium/ Package}
+% \author{Andrew Smith\thanks{Email: aws@awsmith.us}}
+% \date{Version \fileversion\ --- Released \KalDateStr[era=auc]{YMD}{-}{\filedate}}
+%
+% \maketitle
+%
+% \changes{1.0}{2018/06/14}{First public release}
+%
+% \begin{documentation}
+% \begin{abstract}
+% \noindent The \kalendarium/ package provides several macros with which to print dates in classical Latin given days on the Julian or Gregorian calendars, using the same syntax used by ancient Roman authors.  The format of these dates may be customised either in the package options or on a per-command basis; these options also allow for the generation of date strings according to different eras of the Classical period.
+% \end{abstract}
+%
+% \section{Prerequisites}
+% \kalendarium/ is written in \LaTeX3, and thus requires \pkg{xparse} and the \LaTeX3 kernel to be installed.  Furthermore, in order to parse key-value package and command options, the package \pkg{l3keys2e} is also required.
+%
+% \section{Usage and configuration}
+% Most simply, \kalendarium/ may be imported with default formatting in the usual fashion, with \verb|\usepackage{kalendarium}|.  Global formatting options may be set on import via key-value pairs; for example, to display all dates with no abbreviation, numbers fully written out in Latin, and years calculated \textit{ab urbe condita}, this import string may be used:
+%
+% \begin{sample}
+%   \verb|\usepackage[abbreviate=false,dayfmt=latin,era=auc]{kalendarium}|
+% \end{sample}
+%
+% \noindent A complete list of formatting options may be found in Section~\ref{fopt}.
+%
+% \section{The Roman calendar}
+% The \kalendarium/ package provides utilities to format dates according to its namesake, the ancient Roman \textit{kalendarium}.\footnote{This package does not relate in any way to the Catholic liturgical General Roman Calendar.}  While in early Rome, the calendar was subject to great variation at the discretion of the high priests of the \textit{religio Romana}, this package implements the more standardised version used after the Julian reforms of 46 \textsc{bce}.  In addition, it provides formatting options to display dates according to even more modern standards, such as writing years \textit{anno Domini} instead of \textit{ab urbe condita} and avoiding the \textit{bissextum Februarium}.  This section describes the basics of the \textit{kalendarium} and some historical variations thereupon.
+%
+% \subsection{Roman months}
+% Prior to the Roman Republic, a ten-month calendar ascribed to Romulus is reported to have been used.  Since this calendar had already fallen out of use by the Classical period and it required the insertion of fifty-one intercalary days between and during months---sometimes methodically, but often at random---utilities for writing dates according to the Romulan calendar are not provided by this package.
+%
+% Following the Tarquin expulsion, this legendary calendar was replaced with a twelve-month system with an intercalary month inserted between the \textit{Terminalia} and \textit{Regifugium} (23 and 24 February, a newly-added month).\footnote{Plutarch, \textit{Parallel Lives} 18.}  While this iteration of the calendar resolved many of the issues present in the Romulan calendar, it still did not accurately portray the length of a year, having only 354 days per year, and the intercalary month was still somewhat unstable.
+%
+% In 46 \textsc{bce}, the victorious \textit{pontifex maximus} Julius Caesar conducted further calendrical reforms.  The thus-named Julian calendar distributed the days of the intercalary month amongst the other months of the year, instituting the month lengths still used today.  Furthermore, to compensate for the fact that the length of a year cannot be described in a perfect integer number of days, Caesar's calendar inserted an intercalary day (\textit{bissextum}) between the \textit{Terminalia} and \textit{Regifugium} every four years.\footnote{Macrobius, \textit{Saturnalia} I.14.}  Thus, a somewhat modern calendar was achieved:
+%
+% \begin{center}
+% \begin{tabular}{l l c c c}
+%   \toprule
+%   && \multicolumn{3}{c}{Days in month}\\
+%   \cmidrule{3-5}
+%   \multicolumn{2}{c}{Month} & Romulan & Republican & Julian\\
+%   \midrule
+%   March       & \textit{Martius}     & 31 & 31 & 31\\
+%   April       & \textit{Aprilis}     & 30 & 29 & 30\\
+%   May         & \textit{Maius}       & 31 & 31 & 31\\
+%   June        & \textit{Iunius}      & 30 & 29 & 30\\
+%   July        & \textit{Quintilis}   & 31 & 31 & 31\\
+%   August      & \textit{Sextilis}    & 30 & 29 & 31\\
+%   September   & \textit{September}   & 30 & 29 & 30\\
+%   October     & \textit{October}     & 31 & 31 & 31\\
+%   November    & \textit{November}    & 30 & 29 & 30\\
+%   December    & \textit{December}    & 30 & 29 & 31\\
+%   January     & \textit{Ianuarius}   &    & 29 & 31\\
+%   February    & \textit{Februarius}  &    & 28 & 28 \textit{or} 29\\
+%   Intercalary & \textit{Mercedonius} & 51 & 22/23 & \textit{None}\\
+%   \bottomrule
+% \end{tabular}
+% \end{center}
+%
+% \noindent Following the assassination of Julius Caesar in 44 \textsc{bce}, Mark Antony renamed the month of \textit{Quintilis} to \textit{Iulius} (July) in honour of the late emperor.  Furthermore, following the death of Augustus, the month \textit{Sextilis} was renamed \textit{Augustus} (August) according to a referendum in 8 \textsc{bce}.\footnote{Macrobius, \textit{Saturnalia} I.12.}
+%
+% As a further refinement, in the year 1582 \textsc{ce}, Pope Gregory XIII added additional criteria for the calculation of \textit{bissexta}, or leap years: an additional day was to be added to the month of February if the year was divisible by 4, but not if it was divisible by 100, yet still if it was divisible by 400.\footnote{Pope Gregory XIII, \textit{Inter gravissimas}.}  Adopted throughout nearly all of the modern world, this Gregorian calendar is used in all Western nations; nevertheless, for historical compatibility, this package provides support for converting dates on both the Julian and Gregorian calendars.
+%
+% \subsection{Roman days}
+% Each Roman month was ascribed three named days: the Kalends, the Nones, and the Ides.  The Kalends (\textit{Kalendae}, \textit{Kal.}) fell on the first day of every month, without variation.  The Ides (\textit{Idus}, \textit{Id.}) fell on the fifteenth day of ``full'' months---months which comprised 31 days on the Romulan calendar, thus March, May, July/Quintilis, and October---and the thirteenth day of the other ``hollow'' months.  Finally, the Nones (\textit{Nonae}, \textit{Non.}) fell eight (nine inclusively) days before the Ides, on the seventh day of full months and the fifth day of hollow ones.
+%
+% Roman days were counted inclusively, meaning that the current day was taken into consideration when calculating the number of days between two dates.  Thus, a Roman would state that 3 January is not two days after 1 January, but three.  This system of inclusive counting appears throughout the \textit{Kalendarium}, in which dates are expressed in relation to the next closest Nones or Ides of the current month, or the Kalends of the following month.  An exception occurs for the day immediately preceding one of these named days, which is referenced only as \textit{pridie}.  The conjugate term for the day following, \textit{postridie}, does not appear in the Roman calendar.
+%
+% \subsection{Roman weeks}
+% During the monarchic and republican periods, Roman weeks were delineated in eight-day cycles, called \textit{nundina} (sg.\ \textit{nun\-dinum}) on account of their inclusive counting of calendar days.  Under this nundinal system, the days of the week were assigned letters A--H, with public markets and festivals occurring on the \textit{nundinae} and not again for the next eight days.  These market-days acted as a form of weekend for Roman workers, with farmers breaking from their work to travel into the city, sell their wares, and buy provisions to last through the next \textit{nundinum}.\footnote{Macrobius, \textit{Saturnalia} I.16.}
+%
+% In the early imperial period, the nundinal cycle was replaced by the seven-day week (\textit{hebdomas}), influenced by the influx of eastern religion and philosophy to the western Roman empire.  While these hebdomadal days continued to be assigned letters A--G, they were also named after pagan gods and goddesses in the fashion of the Greeks:
+%
+% \begin{center}
+% \begin{tabular}{l l c l}
+%   \toprule
+%   \multicolumn{1}{c}{Modern} & \multicolumn{1}{c}{Latin} & \multicolumn{2}{c}{Namesake}\\
+%   \midrule
+%   Sunday    & \textit{dies Solis}    & \astrosun & Sol (the Sun)\\
+%   Monday    & \textit{dies Lunae}    & \leftmoon & Luna (the Moon)\\
+%   Tuesday   & \textit{dies Martis}   & \mars     & Mars\\
+%   Wednesday & \textit{dies Mercurii} & \mercury  & Mercury\\
+%   Thursday  & \textit{dies Iovis}    & \jupiter  & Jupiter (\textsc{gen.}\ \textit{Iovis})\\
+%   Friday    & \textit{dies Veneris}  & \venus    & Venus (\textsc{gen.}\ \textit{Veneris})\\
+%   Saturday  & \textit{dies Saturni}  & \saturn   & Saturn\\
+%   \bottomrule
+% \end{tabular}
+% \end{center}
+%
+% \noindent Like many other facets of the Roman calendar, these pagan references survived the Christianisation of Rome and continue to appear in the lexica of the modern Romance languages.
+%
+% \subsection{Roman years}
+% Methods used to refer to specific years on the Roman calendar have varied throughout history, beginning with regnal references to the acting king, ordinary consuls, or Diocletian Indiction.  While not ubiquitous in Classical texts, the \textit{ab urbe condita} (\textsc{auc}, ``from the founding of the city (of Rome)'') reckoning, which measures dates in terms of their distance from the legendary founding of Rome in 753 \textsc{bce} counted inclusively, has been widely accepted amongst classicists.  In this era, the year 753 \textsc{bce} would be rendered 1 \textsc{auc}, and 2018 \textsc{ce} would be 2771 \textsc{auc} (2018 + 753).
+%
+% In 525 \textsc{ce}, the monk Dionysius Exiguus devised the \textit{anno Domini} (\textsc{ad}, ``in the year of the Lord'') era, which measures years non-inclusively after the birth of Jesus of Nazareth.\footnote{Dionysius Exiguus, Easter tables.}  To represent dates before this event, the era \textit{ante Christum} (\textsc{ac}, ``before (the Nativity of) Christ'') was popularised by theologian Dionysius Petavius in 1627 \textsc{ce}.\footnote{Dionysius Petavius (Denis Péteau), \textit{De doctrina temporum}.}  These eras are still frequently used in the modern Gregorian calendar, although the non-sectarian Common Era (\textsc{ce}) replacements have become somewhat common.  Furthermore, the phrase \textit{anno Domini} is sometimes shortened to only \textit{anno} (\textsc{a}).
+%
+% \subsection{Latin date syntax}
+% The syntax used in Latin date expressions is rather peculiar, albeit almost entirely formulaic.  Unlike in many modern languages, the names of months were not considered to be nouns, but were adjectives, requiring agreement with their antecedents; additionally, certain phrases were fossilised to the point that they began to be used in expressions that would otherwise be considered ungrammatical.
+%
+% Dates on the named days of each month, which were always plural, were expressed independently using the ablative case of time when (``on the\ldots'').  Thus, they would appear as \textit{Kalendis Februariis}, \textit{Nonis Septembribus}, \textit{Idibus Iuniis}, etc.  While this syntax was common for all date expressions in early Latin, Classical authors often opted for another approach for non-named days.
+%
+% Dates that did not fall on the Kalends, Nones, or Ides were expressed in terms of their relation to the next named day.  Thus, a date after the Kalends of a month but before the Nones would be named by the number of days, counted inclusively, until the Nones; a date after the Nones but before the Ides, by the days until the Ides; and a date after the Ides, by the days until the Kalends of the following month.  These numbers of days were often preceded by the expression \textit{ante diem} (\textsc{a.d.}) and followed by their respective named day and month in the accusative case, plural.  An exception to this format occurred for days immediately preceding a named day, which were expressed as \textit{pridie} (\textit{prid.}), then the named day and month in the accusative plural.
+%
+% A further exception occurred for the month of February in leap years.  Leap days were considered to be a single day under Roman law, and were treated as such when counting days until the next Kalends.  When a leap day was inserted into the month, it was known as the \textit{bissextum} and written \textit{ante diem bis VI Kalendas Martias}; the normal day five days prior to the end of the month was still written \textit{ante diem VI Kalendas Martias}.
+%
+% Counted numbers of days were often written with Roman numerals, as above; however, they were sometimes written out as full ordinal numbers in the accusative case, masculine singular, in agreement with \textit{diem}.  For further elucidation, some months are written in full on the following page.
+%
+% \newgeometry{margin=0.25in}
+% \begin{landscape}
+% \thispagestyle{empty}
+% \centering
+% \hspace{0pt}
+% \vfill
+% \begin{tabular}{r l l l l l l}
+%   \toprule
+%   & \multicolumn{2}{c}{January} & \multicolumn{2}{c}{February} & \multicolumn{1}{c}{\textit{Full}} & \multicolumn{1}{c}{\textit{Hollow}}\\
+%   \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+%   Day & \multicolumn{1}{c}{Full Latin} & \multicolumn{1}{c}{Abbreviated} & \multicolumn{1}{c}{Regular year} & \multicolumn{1}{c}{Leap year} & \multicolumn{1}{c}{March} & \multicolumn{1}{c}{April}\\
+%   \midrule
+%   \ExplSyntaxOn
+%     \int_new:N \g_table_day_int
+%     \int_gset:Nn \g_table_day_int {1}
+%     \int_do_until:nNnn {\g_table_day_int} = {29}
+%       {
+%         \int_use:N \g_table_day_int & \KalDate[abbreviate=false,dayfmt=latin]{2018}{1}{\g_table_day_int} & \KalDate{2018}{1}{\g_table_day_int} & \KalDate{2018}{2}{\g_table_day_int} & \KalDate[bissextum=true]{2016}{2}{\g_table_day_int} & \KalDate{2018}{3}{\g_table_day_int} & \KalDate{2018}{4}{\g_table_day_int}\\
+%         \int_gincr:N \g_table_day_int
+%       }
+%   \ExplSyntaxOff
+%   29 & \KalDate[abbreviate=false,dayfmt=latin]{2018}{1}{29} & \KalDate{2018}{1}{29} && \KalDate[bissextum=true]{2016}{2}{29} & \KalDate{2018}{3}{29} & \KalDate{2018}{4}{29}\\
+%   30 & \KalDate[abbreviate=false,dayfmt=latin]{2018}{1}{30} & \KalDate{2018}{1}{30} &&                                     & \KalDate{2018}{3}{30} & \KalDate{2018}{4}{30}\\
+%   31 & \KalDate[abbreviate=false,dayfmt=latin]{2018}{1}{31} & \KalDate{2018}{1}{31} &&                                     & \KalDate{2018}{3}{31} & \\
+%   \bottomrule
+% \end{tabular}
+% \vfill
+% \hspace{0pt}
+% \end{landscape}
+% \restoregeometry
+%
+% \section{Basic commands}
+% \subsection{Writing a date}
+% \vspace{-8pt}
+% \begin{function}[EXP]{\KalDate, \kal_date:nnn}
+%   \begin{syntax}
+%     \cs{KalDate}\oarg{options}\marg{year}\marg{month}\marg{day}
+%     \cs{kal_date:nnn} \marg{year} \marg{month} \marg{day}
+%   \end{syntax}
+%   This command renders the specified date according to the Roman calendar.  Regardless of century, the \meta{year} must be specified in full: \verb|\KalDate{18}{6}{14}| will result in the year 18~\textsc{ce}, not 2018.  If \meta{options} are specified, they will apply only to the date rendered by their respective instance of this command.
+%
+%   \begin{example}
+%     Here, we render the date 4 July 2018 with default formatting (no abbreviations, day written in Roman numerals, \textit{anno Domini} era):
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate\{2018\}\{7\}\{4\}}} $\Rightarrow$ \KalDate[abbreviate=false,era=ad]{2018}{7}{4}
+%   \end{example}
+% \end{function}
+%
+% \subsection{Writing a date from a string}
+% \vspace{-8pt}
+% \begin{function}[EXP]{\KalDateStr, \kal_date_string:nnn, \kal_date_string:nno}
+%   \begin{syntax}
+%     \cs{KalDateStr}\oarg{options}\marg{format}\marg{delimiter}\marg{date string}
+%     \cs{kal_date_string:nnn} \marg{format} \marg{delimiter} \marg{date string}
+%   \end{syntax}
+%   While the previous command works well for predefined, manually-typed dates, dates generated by macros nearly always appear in the form of a single string, not three separate arguments.  For such scenarios, \kalendarium/ provides the \verb|\KalDateStr| command, which converts a \meta{date string} in the specified \meta{format} with segments separated by the \meta{delimiter} into a Roman date.  The \meta{format} should consist of a maximum of three characters---\texttt{Y} for the year, \texttt{M} for the month, and \texttt{D} for the day of the month---in the order in which they appear in the \meta{date string}.
+%
+%   \begin{example}
+%     Here, we render the date 4 July 2018 from ISO format (\texttt{YYYY-MM-DD}) and standard United States format (\texttt{M/D/YYYY}) in the Roman calendar:
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDateStr\{YMD\}\{-\}\{2018-07-04\}}} $\Rightarrow$\\\hspace*{2em}\KalDateStr[abbreviate=false,era=ad]{YMD}{-}{2018-07-04}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDateStr\{MDY\}\{/\}\{7/4/2018\}}} $\Rightarrow$\\\hspace*{2em}\KalDateStr[abbreviate=false,era=ad]{MDY}{/}{7/4/2018}
+%   \end{example}
+%   When using the standard \LaTeX\ command \verb|\KalDateStr|, the \meta{date string} is expanded once to allow for the use of macros as input; this is equivalent to the \LaTeX3 command \verb|\kal_date_string:nno|.
+%
+%   \begin{example}
+%     Here, we render the date on which the \kalendarium/ style file was last generated according to the \verb|\filedate| macro ($\Rightarrow$ \texttt{\filedate}) in the Roman calendar:
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDateStr\{YMD\}\{-\}\{\textbackslash filedate\}}} $\Rightarrow$\\\hspace*{2em}\KalDateStr[abbreviate=false,era=ad]{YMD}{-}{\filedate}
+%   \end{example}
+% \end{function}
+%
+% \subsection{Writing the current date}
+% \vspace{-8pt}
+% \begin{function}[EXP]{\KalToday}
+%   \begin{syntax}
+%     \cs{KalToday}\oarg{options}
+%   \end{syntax}
+%   This command renders the current date according to the Roman calendar, serving as the \kalendarium/ equivalent of the \verb|\today| macro.
+%
+%   \begin{example}
+%     Here, we render the date on which this document was generated (\today) in the Roman calendar:
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalToday}} $\Rightarrow$ \KalToday[abbreviate=false,era=ad]
+%   \end{example}
+% \end{function}
+%
+% \subsection{Determining the weekday of a date}
+% \vspace{-8pt}
+% \begin{function}[EXP]{\KalWeekday, \kal_weekday:nnn}
+%   \begin{syntax}
+%     \cs{KalWeekday}\oarg{options}\marg{year}\marg{month}\marg{day}
+%     \cs{kal_weekday:n} \marg{year} \marg{month} \marg{day}
+%   \end{syntax}
+%   This command determines the day of the week of a given day and displays its Latin name.  Like the rest of \kalendarium/, it can handle dates on both the Julian and Gregorian calendars and takes the same set of \meta{options} as other commands.
+%
+%   \begin{example}
+%     Here, we determine the day of the week on which 4 July 2018 will fall:
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{dies \textbackslash KalWeekday\{2018\}\{7\}\{4\}}} $\Rightarrow$ dies \KalWeekday[abbreviate=false]{2018}{7}{4}
+%
+%     \noindent \textcolor{maroon}{\texttt{dies \textbackslash KalWeekday[abbreviate=true]\{2018\}\{7\}\{4\}}} $\Rightarrow$ dies \KalWeekday[abbreviate=true]{2018}{7}{4}
+%   \end{example}
+% \end{function}
+%
+% \section{Customisation}
+% \subsection{Format options} \label{fopt}
+% In order to provide the ability to render dates on the Roman calendar through various ages of the Classical period, \kalendarium/ provides many options to customise the format in which dates are displayed.  These options may be set in the global package options (\verb|\usepackage| statement) or for individual commands via the \meta{options} argument.  Regardless of which means of configuration is used, options are set via comma-separated key-value pairs of the form \texttt{[\meta{key_1}=\meta{value_1},\meta{key_2}=\meta{value_2},\ldots]}, in which \meta{key_n} is any of the options in the left margin of this section and \meta{value_n} is one of the accepted choices listed thereby.  Values with a \textcolor{navy}{\large \bell} blue bell to their left are the default values for their respective options.
+%
+% \vspace{-12pt}
+% \begin{variable}{abbreviate}
+%   This variable determines whether to use common abbreviations (\textsc{a.d.}\ for \textit{ante diem}, Kal.~for \textit{Kalendas}, etc.) instead of full Latin phrases when displaying dates.
+%
+%   \begin{accepted}
+%     \begin{tabular}{l l}
+%       \nondefault{true} & Display dates in abbreviated format.\\
+%       \default{false}   & Display dates in full, unabbreviated Latin.
+%     \end{tabular}
+%   \end{accepted}
+%   \interblocksp
+%   \begin{example}
+%     Here, we render the date 4 July 2018, first unabbreviated, then with the \texttt{abbreviate} option set to \texttt{true}:
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[abbreviate=false]\{2018\}\{7\}\{4\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,era=ad]{2018}{7}{4}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[abbreviate=true]\{2018\}\{7\}\{4\}}} $\Rightarrow\\\hspace*{2em}\underbrace{\textsc{a.d.}}_{\mathclap{\textit{ante diem}}}\ \text{IV}\ \underbrace{\text{Non.}}_{\mathclap{\textit{Nonas}}}\ \underbrace{\text{Iul.}}_{\mathclap{\textit{Iulias}}}\ \underbrace{\textsc{a.d.}}_{\mathrlap{\hspace*{-0.75em}\textit{anno Domini}}}\ \text{MMXVIII}$
+%   \end{example}
+% \end{variable}
+%
+% \begin{variable}{antediem}
+%   This variable determines whether to display the day portion of dates in the Classical \textit{ante diem} style or in the Medieval ablative ordinal style.
+%
+%   \begin{accepted}
+%     \begin{tabular}{l p{0.8\textwidth}}
+%       \default{true}     & Display days in Classical style, prefixed by \textit{ante diem} (\textsc{a.d.}) and as an ordinal in the accusative case, when appropriate.\\
+%       \nondefault{false} & Display days in Medieval style, with no prefix and as an ordinal in the ablative case, when appropriate.
+%     \end{tabular}
+%   \end{accepted}
+%   \interblocksp
+%   \begin{example}
+%     Here, we render the date 4 May 1886 in both the Classical and Medieval styles:
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[antediem=true]\{1886\}\{5\}\{4\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,antediem=true,era=ad]{1886}{5}{4}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[antediem=false]\{1886\}\{5\}\{4\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,antediem=false,era=ad]{1886}{5}{4}
+%   \end{example}
+% \end{variable}
+%
+% \begin{variable}{bissextum}
+%   This variable determines whether to display dates in February of leap years with a \textit{bissextum} on 24 February or to continue the counting of days through the \textit{Terminalia}.
+%
+%   \begin{accepted}
+%     \begin{tabular}{l l}
+%       \default{true}     & Display 24 February as \textit{a.d.\ bissextum Kalendas Martias} in leap years.\\
+%       \nondefault{false} & Display 24 February as \textit{a.d.\ septimum Kalendas Martias} in leap years.
+%     \end{tabular}
+%   \end{accepted}
+%   \interblocksp
+%   \begin{example}
+%     Here, we render the date 24 February 2016, first with a \textit{bissextum} then without:
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[bissextum=true]\{2016\}\{2\}\{24\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,bissextum=true,era=ad]{2016}{2}{24}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[bissextum=false]\{2016\}\{2\}\{24\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,bissextum=false,era=ad]{2016}{2}{24}
+%   \end{example}
+%   \interblocksp
+%   \begin{example}
+%     \noindent Here, we render the same dates, but with Latin ordinal numbers instead of Roman numerals:
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[bissextum=true,dayfmt=latin]\{2016\}\{2\}\{24\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,bissextum=true,era=ad,dayfmt=latin]{2016}{2}{24}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[bissextum=false,dayfmt=latin]\{2016\}\{2\}\{24\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,bissextum=false,era=ad,dayfmt=latin]{2016}{2}{24}
+%   \end{example}
+% \end{variable}
+%
+% \begin{variable}{dayfmt}
+%   This variable determines the format in which to display the day portion of an \textit{ante diem} date.  If an invalid value is set, days will be displayed in Roman numerals, as is default.
+%
+%   \begin{accepted}
+%     \begin{tabular}{l p{0.8\textwidth}}
+%       \default{roman}     & Display the day in Roman numerals.\\
+%       \nondefault{latin}  & Display the day in full Latin text.  If the option \texttt{antediem} is set to \texttt{true}, the ordinal number will be in the accusative singular; otherwise, it will be in the ablative, in Medieval style.\\
+%       \nondefault{arabic} & Display the day in Arabic numerals.
+%     \end{tabular}
+%   \end{accepted}
+%   \interblocksp
+%   \begin{example}
+%     Here, we render the date 27 November 1095 with all supported day formats:
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[dayfmt=roman]\{1095\}\{11\}\{27\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,dayfmt=roman,era=ad]{1095}{11}{27}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[dayfmt=latin]\{1095\}\{11\}\{27\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,dayfmt=latin,era=ad]{1095}{11}{27}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[dayfmt=latin,antediem=false]\{1095\}\{11\}\{27\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,dayfmt=latin,antediem=false,era=ad]{1095}{11}{27}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[dayfmt=arabic]\{1095\}\{11\}\{27\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,dayfmt=arabic,era=ad]{1095}{11}{27}
+%   \end{example}
+% \end{variable}
+%
+% \begin{variable}{era}
+%   This variable determines the era in which to display the specified year, or the prefix or suffix to be placed around the year number.
+%
+%   \begin{accepted}
+%     \begin{tabular}{l p{0.8\textwidth}}
+%       \default{ad}         & Display years in \textit{anno Domini} (\textsc{a.d.}) and \textit{ante Christum} (\textsc{a.c.}) format.\\
+%       \nondefault{adshort} & Same as \textcolor{navy}{\texttt{ad}}, except \textit{anno Domini} is shortened to only \textit{anno} (\textsc{a.}).\\
+%       \nondefault{auc}     & Display years \textit{ab urbe condita} (\textsc{a.u.c.}), the time since the legendary founding of the city of Rome in 753~\textsc{bce}.\\
+%       \nondefault{secular} & Display years in a Latinised form of the secular Before Common Era and Common Era format, translated to \textit{ante saeculum commune} (\textsc{a.s.c.}) and \textit{saeculo communi} (\textsc{s.c.}), respectively.\\
+%       \nondefault{none}, \textcolor{navy}{\texttt{*}} & Do not display the year when rendering dates.
+%     \end{tabular}
+%   \end{accepted}
+%   \interblocksp
+%   \begin{example}
+%     Here, we render the date 7 November 1917 in all supported eras:
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[era=auc]\{1917\}\{11\}\{7\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,era=auc]{1917}{11}{7}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[era=ad]\{1917\}\{11\}\{7\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,era=ad]{1917}{11}{7}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[era=adshort]\{1917\}\{11\}\{7\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,era=adshort]{1917}{11}{7}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[era=secular]\{1917\}\{11\}\{7\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,era=secular]{1917}{11}{7}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[era=none]\{1917\}\{11\}\{7\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,era=none]{1917}{11}{7}
+%   \end{example}
+% \end{variable}
+%
+% \begin{variable}{julian}
+%   This variable determines whether to determine leap years and weekdays according to the Julian or Gregorian calendar.
+%
+%   \begin{accepted}
+%     \begin{tabular}{l p{0.8\textwidth}}
+%       \nondefault{true} & Perform date calculations according to the Julian calendar.\\
+%       \default{false}   & Perform date calculations according to the Gregorian calendar.
+%     \end{tabular}
+%   \end{accepted}
+%   \interblocksp
+%   \begin{example}
+%     Here, we render the date 24 February 1900 on both the Julian and Gregorian calendars.  On the Julian calendar, 1900 is considered a leap year, and thus 24 February is a \textit{bissextum}; however, on the Gregorian calendar, it is not.
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[julian=true]\{1990\}\{2\}\{24\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,bissextum=true,julian=true,era=ad]{1990}{2}{24}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[julian=false]\{1990\}\{2\}\{24\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,bissextum=false,julian=true,era=ad]{1990}{2}{24}
+%   \end{example}
+% \end{variable}
+% \begin{variable}{oldmonths}
+%   This variable determines whether to display the Imperial names for the seventh and eighth months of the year, \textit{Iulius} and \textit{Augustus}, or the (pre-)Republican names, \textit{Quintilis} and \textit{Sextilis}.
+%
+%   \begin{accepted}
+%     \begin{tabular}{l l}
+%       \nondefault{true} & Display month names as in the Republican period and prior.\\
+%       \default{false}   & Display month names as in the Imperial period and after.
+%     \end{tabular}
+%   \end{accepted}
+%   \interblocksp
+%   \begin{example}
+%     Here, we render the date 4 July 2018, first with its Republican name \textit{Quintilis}, then with its Imperial name \textit{Iulius}:
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[oldmonths=true]\{2018\}\{7\}\{4\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,oldmonths=true,era=ad]{2018}{7}{4}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[oldmonths=false]\{2018\}\{7\}\{4\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,oldmonths=false,era=ad]{2018}{7}{4}
+%   \end{example}
+% \end{variable}
+%
+% \begin{variable}{periods}
+%   This variable determines whether to display periods to indicate abbreviations for common calendrical phrases.  If the \texttt{abbreviate} option is set to \texttt{false}, this option will have no effect on the date format.
+%
+%   \begin{accepted}
+%     \begin{tabular}{l l}
+%       \default{true}     & Display periods to indicate abbreviated terms.\\
+%       \nondefault{false} & Do not display any periods amidst abbreviations.
+%     \end{tabular}
+%   \end{accepted}
+%   \interblocksp
+%   \begin{example}
+%     Here, we render the date 25 December 1776, first with periods, then with the \texttt{periods} option set to \texttt{false}:
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[abbreviate=true]\{1776\}\{12\}\{25\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=true,era=adshort]{1776}{12}{25}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[abbreviate=true,periods=false]\{1776\}\{12\}\{25\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=true,periods=false,era=adshort]{1776}{12}{25}
+%   \end{example}
+% \end{variable}
+%
+% \begin{variable}{yearfmt}
+%   This variable determines the format in which to display the numeric year of a date for which the option \texttt{era} is not set to \texttt{none}.  If an invalid value is set, years will be displayed in Roman numerals, as is default.
+%
+%   \begin{accepted}
+%     \begin{tabular}{l p{0.8\textwidth}}
+%       \default{roman}     & Display the year in Roman numerals.\\
+%       \nondefault{arabic} & Display the year in Arabic numerals.
+%     \end{tabular}
+%   \end{accepted}
+%   \interblocksp
+%   \begin{example}
+%     Here, we render the date 27 November 1095 with all supported year formats:
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[yearfmt=roman]\{1095\}\{11\}\{27\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,yearfmt=roman,era=ad]{1095}{11}{27}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[yearfmt=arabic]\{1095\}\{11\}\{27\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=false,yearfmt=arabic,era=ad]{1095}{11}{27}
+%   \end{example}
+% \end{variable}
+%
+% \subsection{Formatting commands}
+% In order to provide even more control over the formatting of Roman calendar dates, \kalendarium/ provides several commands that may be overridden to change the visual appearance of its output.  By default, all Roman numerals are output in lowercase, so these formatting commands must perform any desired case transformations in addition to styling operations.
+%
+% \vspace{-4pt}
+% \begin{function}[EXP]{\KalAbbrFormat}
+%   \begin{syntax}
+%     \cs{KalAbbrFormat}\marg{abbreviation}
+%   \end{syntax}
+%   This command controls the display of all single-letter abbreviations within date expressions.  If the option \texttt{abbreviate} is set to \texttt{false}, it will have no apparent effect on the output of any command.
+%
+%   \begin{example}
+%     Here, we override \verb|\KalAbbrFormat| to render all abbreviations in italics instead of the default small capitals:
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[abbreviate=true,era=adshort]\{2018\}\{7\}\{4\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=true,era=adshort]{2018}{7}{4}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash renewcommand\{\textbackslash KalAbbrFormat\}[1]\{\textbackslash textit\{\#1\}\}}\\
+%                                  \texttt{\textbackslash KalDate[abbreviate=true,era=adshort]\{2018\}\{7\}\{4\}}} $\Rightarrow$\\\hspace*{2em}\textit{a.d.}~IV Non.~Iul.~\textit{a.}~MMXVIII
+%   \end{example}
+% \end{function}
+%
+% \begin{function}[EXP]{\KalDayFormat}
+%   \begin{syntax}
+%     \cs{KalDayFormat}\marg{day}
+%   \end{syntax}
+%   This command controls the display of all day numbers within date expressions.  By default, it only serves to capitalise Roman numerals.
+%
+%   \begin{example}
+%     Here, we override \verb|\KalDayFormat| to underline and capitalise all day numbers:
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[abbreviate=true,era=adshort]\{2018\}\{7\}\{4\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=true,era=adshort]{2018}{7}{4}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash renewcommand\{\textbackslash KalDayFormat\}[1]\{\textbackslash underline\{\textbackslash MakeUppercase\{\#1\}\}\}}\\
+%                                  \texttt{\textbackslash KalDate[abbreviate=true,era=adshort]\{2018\}\{7\}\{4\}}} $\Rightarrow$\\\hspace*{2em}\textsc{a.d.}~\underline{IV} Non.~Iul.~\textsc{a.}~MMXVIII
+%   \end{example}
+% \end{function}
+%
+% \begin{function}[EXP]{\KalYearFormat}
+%   \begin{syntax}
+%     \cs{KalYearFormat}\marg{year}
+%   \end{syntax}
+%   This command controls the display of all year numbers within date expressions.  By default, it only serves to capitalise Roman numerals.
+%
+%   \begin{example}
+%     Here, we override \verb|\KalYearFormat| to overline all year numbers and render them in small capitals:
+%
+%     \medskip
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash KalDate[abbreviate=true,era=adshort]\{2018\}\{7\}\{4\}}} $\Rightarrow$\\\hspace*{2em}\KalDate[abbreviate=true,era=adshort]{2018}{7}{4}
+%
+%     \noindent \textcolor{maroon}{\texttt{\textbackslash renewcommand\{\textbackslash KalYearFormat\}[1]\{\$\textbackslash overline\{\textbackslash mbox\{\textbackslash textsc\{\#1\}\}\}\$\}}\\
+%                                  \texttt{\textbackslash KalDate[abbreviate=true,era=adshort]\{2018\}\{7\}\{4\}}} $\Rightarrow$\\\hspace*{2em}\textsc{a.d.}~IV Non.~Iul.~\textsc{a.}~$\overline{\mbox{\textsc{mmxviii}}}$
+%   \end{example}
+% \end{function}
+% \end{documentation}
+%
+% \begin{implementation}
+% \section{Implementation}
+% \subsection{Package declaration and dependencies}
+%    \begin{macrocode}
+%<*package>
+%    \end{macrocode}
+%    \begin{macrocode}
+\RequirePackage{xparse}
+\RequirePackage{l3keys2e}
+\ProvidesExplPackage
+  {kalendarium}
+  {2018-06-17}{1.0}
+  {A package to display dates in the classical Roman style}
+\ExplSyntaxOn
+%    \end{macrocode}
+%
+% \subsection{Package options}
+% Process global options immediately upon loading the package, setting default values for any options not specified by the user.
+%
+%    \begin{macrocode}
+\keys_define:nn {kalendarium}{
+  abbreviate .bool_set:N = \l_kal_abbreviate_bool,
+  abbreviate .initial:n  = { false },
+  periods    .bool_set:N = \l_kal_periods_bool,
+  periods    .initial:n  = { true },
+  era        .tl_set:N   = \l_kal_era_tl,
+  era        .initial:n  = { ad },
+  julian     .bool_set:N = \l_kal_julian_bool,
+  julian     .initial:n  = { false },
+  dayfmt     .tl_set:N   = \l_kal_dayfmt_tl,
+  dayfmt     .initial:n  = { roman },
+  yearfmt    .tl_set:N   = \l_kal_yearfmt_tl,
+  yearfmt    .initial:n  = { roman },
+  antediem   .bool_set:N = \l_kal_antediem_bool,
+  antediem   .initial:n  = { true },
+  bissextum  .bool_set:N = \l_kal_bissextum_bool,
+  bissextum  .initial:n  = { true },
+  oldmonths  .bool_set:N = \l_kal_oldmonths_bool,
+  oldmonths  .initial:n  = { false }
+}
+\ProcessKeysOptions {kalendarium}
+%    \end{macrocode}
+%
+% \subsection{Constant lists}
+% In order to convert numeric dates to written Latin, lookup lists are allocated for each required conversion.  Thus, not all genders, numbers, and cases of adjectives are listed, but only those that regularly appear in Roman date strings.
+%
+% \begin{variable}[internal]{\c_kal_day_acc_clist}
+% Ordinal numbers 1--19 in the accusative singular masculine; the \textit{bissextum}, while not the ordinal number 20, is allocated the twentieth position in this and other ordinal lists for the sake of convenience.  Furthermore, the ordinals \textit{primum} and \textit{secundum} do not appear in date strings but are included nonetheless to facilitate index lookups.
+%    \begin{macrocode}
+\clist_new:N  \c_kal_day_acc_clist
+\clist_set:Nn \c_kal_day_acc_clist {
+  primum,secundum,tertium,quartum,quintum,sextum,septimum,octavum,nonum,decimum,
+  undecimum,duodecimum,tertium\ decimum,quartum\ decimum,quintum\ decimum,
+  sextum\ decimum,septimum\ decimum,duodevicesimum,undevicesimum,bissextum
+}
+%    \end{macrocode}
+% \end{variable}
+% \begin{variable}[internal]{\c_kal_day_abl_clist}
+% Ordinal numbers 1--19 in the ablative singular masculine; used only for the Medieval day format that forgoes the prefix \textit{ante diem}.
+%    \begin{macrocode}
+\clist_new:N  \c_kal_day_abl_clist
+\clist_set:Nn \c_kal_day_abl_clist {
+  primo,secundo,tertio,quarto,quinto,sexto,septimo,octavo,nono,decimo,
+  undecimo,duodecimo,tertio\ decimo,quarto\ decimo,quinto\ decimo,
+  sexto\ decimo,septimo\ decimo,duodevicesimo,undevicesimo,bissexto
+}
+%    \end{macrocode}
+% \end{variable}
+% \begin{variable}[internal]{\c_kal_weekday_gen_clist}
+% Latin names of weekdays in the genitive singular case, intended to follow the word \textit{dies}.  Saturday is placed first due to the weekday indexing used in Zeller's congruence.
+%    \begin{macrocode}
+\clist_new:N  \c_kal_weekday_gen_clist
+\clist_set:Nn \c_kal_weekday_gen_clist {
+  Saturni,Solis,Lunae,Martis,Mercurii,Iovis,Veneris
+}
+%    \end{macrocode}
+% \end{variable}
+% \begin{variable}[internal]{\c_kal_weekday_abbr_clist}
+% Abbreviated Latin names of weekdays; a simple truncation of values from \cs{c_kal_weekday_gen_clist} could not be performed due to the irregular lengths of the abbreviations for Tuesday and Wednesday.
+%    \begin{macrocode}
+\clist_new:N  \c_kal_weekday_abbr_clist
+\clist_set:Nn \c_kal_weekday_abbr_clist {
+  Sat,Sol,Lun,Mart,Merc,Iov,Ven
+}
+%    \end{macrocode}
+% \end{variable}
+% \begin{variable}[internal]{\c_kal_month_acc_clist, \c_kal_month_abl_clist, \c_kal_month_abbr_clist}
+% Full Latin names of months in the accusative and ablative plural feminine, along with abbreviations for the months.  Note that \textit{Quintilis} and \textit{Sextilis} are considered the thirteenth and fourteenth months to facilitate list access; however, \textit{Quintilis} is not considered the month after December when determining its Kalends reference.  August is repeated after \textit{Sextilis} to facilitate Kalends referencing.  These issues could be solved in a much cleaner manner if \LaTeX3 data structures were more than simple stacks.
+%    \begin{macrocode}
+\clist_new:N  \c_kal_month_acc_clist
+\clist_set:Nn \c_kal_month_acc_clist {
+  Ianuarias,Februarias,Martias,Apriles,Maias,Iunias,Iulias,Augustas,
+  Septembres,Octobres,Novembres,Decembres,Quintiles,Sextiles,Augustas
+}
+%    \end{macrocode}
+%    \begin{macrocode}
+\clist_new:N  \c_kal_month_abl_clist
+\clist_set:Nn \c_kal_month_abl_clist {
+  Ianuariis,Februariis,Martiis,Aprilibus,Maiis,Iuniis,Iuliis,
+  Augustis,Septembribus,Octobribus,Novembribus,Decembribus,
+  Quintilibus,Sextilibus,Augustis
+}
+%    \end{macrocode}
+%    \begin{macrocode}
+\clist_new:N  \c_kal_month_abbr_clist
+\clist_set:Nn \c_kal_month_abbr_clist {
+  Ian,Feb,Mar,Apr,Mai,Iun,Iul,Aug,Sept,Oct,Nov,Dec,Quin,Sex,Aug
+}
+%    \end{macrocode}
+% \end{variable}
+% \begin{variable}[internal]{\c_kal_month_lengths_clist}
+% Number of days in all months, with February to be handled later.
+%    \begin{macrocode}
+\clist_new:N  \c_kal_month_lengths_clist
+\clist_set:Nn \c_kal_month_lengths_clist {
+  31,28,31,30,31,30,31,31,30,31,30,31,31,31
+}
+%    \end{macrocode}
+% \end{variable}
+% \begin{variable}[internal]{\c_kal_month_ides_clist}
+% Day on which the Ides of each month fall; determined by whether months are ``full'' or ``hollow'' on the Romulan calendar.
+%    \begin{macrocode}
+\clist_new:N  \c_kal_month_ides_clist
+\clist_set:Nn \c_kal_month_ides_clist {
+  13,13,15,13,15,13,15,13,13,15,13,13,15,13
+}
+%    \end{macrocode}
+% \end{variable}
+%
+% \subsection{Internal utility functions}
+% \begin{macro}[internal]{\kal_period:n}
+% Conditionally renders a period in abbreviations depending on the value of the \texttt{periods} option; saves a moderate amount of typing.
+%    \begin{macrocode}
+\cs_new:Nn \kal_period:n {
+  \bool_if:NT \l_kal_periods_bool {.}
+}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}[internal]{\kal_abbr:nn}
+% Conditionally renders full text (\verb|#1|) or an abbreviation (\verb|#2|) followed by a period depending on the value of the \texttt{abbreviate} option.
+%    \begin{macrocode}
+\cs_new:Npn \kal_abbr:nn #1#2 {
+  \bool_if:NTF \l_kal_abbreviate_bool {#2 \kal_period:n{}} {#1}
+}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}[internal]{\kal_month:nn}
+% Conditionally renders the full name of the month at index \verb|#2| in list \verb|#1| or an abbreviation depending on the value of the \texttt{abbreviate} option.
+%    \begin{macrocode}
+\cs_new:Npn \kal_month:nn #1#2 {
+  \kal_abbr:nn
+    { \clist_item:Nn {#1} {#2} }
+    { \clist_item:Nn \c_kal_month_abbr_clist {#2} }
+}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}[internal]{\kal_ante_diem:nn}
+% Renders the day portion (\verb|#1|) of dates that would be preceded by \textit{ante diem} in the Classical period.  If \verb|#2| is equal to \texttt{1}, the full Latin ordinal number for the day is rendered in the accusative case; otherwise, the number is rendered as-is.
+%    \begin{macrocode}
+\cs_new:Npn \kal_ante_diem:nn #1#2 {
+  \bool_if:nTF {\l_kal_antediem_bool}
+    {
+      \kal_abbr:nn {ante\ diem} {\KalAbbrFormat{a \kal_period:n{} d}}
+      \ \int_compare:nNnTF {#2} = {1}
+          { \clist_item:Nn \c_kal_day_acc_clist {#1} }
+          { #1 }
+    }
+%    \end{macrocode}
+% If the user has instead chosen to use the Medieval day syntax (no \textit{ante diem}), render the number in the ablative case.
+%    \begin{macrocode}
+    {
+      \int_compare:nNnTF {#2} = {1}
+        { \clist_item:Nn \c_kal_day_abl_clist {#1} }
+        { #1 }
+    }
+}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}[internal]{\kal_day:n}
+% Renders the full name of the day \verb|#1| days before the next named day, inclusive.  If it is the day directly before (2 days inclusive), render \textit{pridie}.
+%    \begin{macrocode}
+\cs_new:Npn \kal_day:n #1 {
+  \int_compare:nNnTF {#1} = {2}
+    { \kal_abbr:nn {pridie} {prid} }
+%    \end{macrocode}
+% Otherwise, render the appropriate \textit{ante diem} number in the format set by the user in the option \texttt{dayfmt}.
+%    \begin{macrocode}
+    {
+      \str_case_x:nnF { \l_kal_dayfmt_tl }
+        {
+          { latin }  { \kal_ante_diem:nn {#1} {1} }
+          { roman }  { \kal_ante_diem:nn {\KalDayFormat{
+                                            \int_to_roman:n {#1}}} {0} }
+          { arabic } { \kal_ante_diem:nn {\int_eval:n {#1}} {0} }
+        }
+%    \end{macrocode}
+% If an invalid day format was set, use Roman numerals.
+%    \begin{macrocode}
+        { \kal_ante_diem:nn {\KalDayFormat{\int_to_roman:n {#1}}} {0} }
+    }
+}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}[internal]{\kal_bissextum_day:n}
+% Renders the names of days (\verb|#1|) in February in years for which \textit{bissexta} (leap days) are inserted.  If the specified day is before 24 February, it can be rendered normally.
+%    \begin{macrocode}
+\cs_new:Npn \kal_bissextum_day:n #1 {
+  \int_compare:nNnTF {#1} < {24}
+    { \kal_day:n { \l_kal_month_length_int - #1 + 1 } }
+%    \end{macrocode}
+% If the day is after 24 February, we must add another day to the distance from the Kalends to compensate for the \textit{bissextum}.
+%    \begin{macrocode}
+    {
+      \int_compare:nNnTF {#1} > {24}
+        { \kal_day:n { \l_kal_month_length_int - #1 + 2 } }
+%    \end{macrocode}
+% If the specified day is the \textit{bissextum} itself, render its unique string in the format requested by the user, or in Roman numerals if the format is invalid.
+%    \begin{macrocode}
+        {
+          \str_case_x:nnF { \l_kal_dayfmt_tl }
+            {
+              { latin }  { \kal_ante_diem:nn {20} {1} }
+              { roman }  { \kal_ante_diem:nn {bis\ \KalDayFormat{vi} } {0} }
+              { arabic } { \kal_ante_diem:nn {bis\ \KalDayFormat{6} } {0} }
+            }
+            { \kal_ante_diem:nn {bis\ \KalDayFormat{vi} } {0} }
+        }
+    }
+}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}[internal]{\kal_year:n}
+% Renders the year \verb|#1| in the format set in the option \textit{yearfmt}, defaulting to Roman numerals if an invalid value was set.
+%    \begin{macrocode}
+\cs_new:Npn \kal_year:n #1 {
+  \KalYearFormat{
+    \str_case_x:nnF { \l_kal_yearfmt_tl }
+      {
+        { roman }  { \int_to_roman:n {#1} }
+        { arabic } { \int_eval:n {#1} }
+      }
+      { \int_to_roman:n {#1} }
+  }
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Date rendering}
+% \begin{variable}[internal]{\l_kal_month_idx_int, \l_kal_month_length_int, \l_kal_month_ides_int}
+% Begin by defining some scratch variables for the index of the month to pull from the constant lists, the length of the specified month, and the day on which the Ides of the month fall.
+%    \begin{macrocode}
+\int_new:N \l_kal_month_idx_int
+\int_new:N \l_kal_month_length_int
+\int_new:N \l_kal_month_ides_int
+%    \end{macrocode}
+% \end{variable}
+% \begin{macro}[internal]{\kal_date:nnn}
+% We can now start the process of rendering a date string.
+%    \begin{macrocode}
+\cs_new:Npn \kal_date:nnn #1#2#3 {
+%    \end{macrocode}
+% \textbf{Archaic months.}\quad The first quantity we must establish is the index of the month \verb|#2| to use from the constant lists.  If the user has requested the archaic months \textit{Quintilis} and \textit{Sextilis} via the \texttt{oldmonths} option, target those values at indices 13 and 14.
+%    \begin{macrocode}
+  \bool_if:nTF {\l_kal_oldmonths_bool}
+    {
+      \int_case:nnF {#2}
+        {
+          {7} { \int_set:Nn \l_kal_month_idx_int {13} }
+          {8} { \int_set:Nn \l_kal_month_idx_int {14} }
+        }
+%    \end{macrocode}
+% Otherwise, retrieve values from the index specified.
+%    \begin{macrocode}
+        { \int_set:Nn \l_kal_month_idx_int {#2} }
+    }
+    { \int_set:Nn \l_kal_month_idx_int {#2} }
+%    \end{macrocode}
+% \textbf{Leap years.}\quad Now we must deal with leap years.  Since this package targets both the Julian and Gregorian calendars, we shall need to handle both at once.  Begin by checking the criteria for a leap month common to both calendars: the month must be February, and the year must be evenly divisible by 4.
+%    \begin{macrocode}
+  \int_compare:nNnTF {\l_kal_month_idx_int} = {2}
+    {
+      \int_compare:nNnTF { \int_mod:nn {#1} {4} } = {0}
+        {
+%    \end{macrocode}
+% If the user has chosen to use the Julian calendar or the specified year satisfies the Gregorian criterion of not being evenly divisible by 100, the month will be 29 days long.
+%    \begin{macrocode}
+          \bool_if:nTF
+            {
+              \l_kal_julian_bool ||
+              \int_compare_p:n { \int_mod:nn {#1} {100} != 0 }
+            }
+            { \int_set:Nn \l_kal_month_length_int {29} }
+%    \end{macrocode}
+% If the Gregorian calendar is in use and the year is evenly divisible by 100, the month will have 28 days, except in the case that the year is also evenly divisible by 400, when it will have 29 days.
+%    \begin{macrocode}
+            {
+              \int_compare:nNnTF { \int_mod:nn {#1} {400} } = {0}
+                { \int_set:Nn \l_kal_month_length_int {29} }
+                { \int_set:Nn \l_kal_month_length_int {28} }
+            }
+        }
+%    \end{macrocode}
+% If none of the leap year criteria are satisfied, February will have 28 days.
+%    \begin{macrocode}
+        { \int_set:Nn \l_kal_month_length_int {28} }
+    }
+%    \end{macrocode}
+% Finally, if the specified month is not February, look up its length in the list of month durations.
+%    \begin{macrocode}
+    {
+      \int_set:Nn \l_kal_month_length_int
+        { \clist_item:Nn \c_kal_month_lengths_clist {\l_kal_month_idx_int} }
+    }
+%    \end{macrocode}
+% \textbf{Naming the day.}\quad Now that we have figured out how long our month is, we can render the name of the day \verb|#3|.  We shall begin by determining on which day of the month the Ides will fall, as many of the other days pivot thereupon.
+%    \begin{macrocode}
+  \int_set:Nn \l_kal_month_ides_int
+    { \clist_item:Nn \c_kal_month_ides_clist {\l_kal_month_idx_int} }
+%    \end{macrocode}
+% We shall handle the named days themselves first: the Kalends on the first day of the month, the Nones eight (nine inclusively) days before the Ides, and the Ides.
+%    \begin{macrocode}
+  \int_case:nnTF {#3}
+    {
+      { 1 }                         { \kal_abbr:nn {Kalendis} {Kal} }
+      { \l_kal_month_ides_int - 8 } { \kal_abbr:nn {Nonis}    {Non} }
+      { \l_kal_month_ides_int }     { \kal_abbr:nn {Idibus}   {Id}  }
+    }
+%    \end{macrocode}
+% If the specified day is one of these named days, render the month in the ablative plural.
+%    \begin{macrocode}
+    { \ \kal_month:nn {\c_kal_month_abl_clist} {\l_kal_month_idx_int} }
+%    \end{macrocode}
+% If the specified day does not have a name ascribed to it, we must determine the next named day thereafter.  We shall walk forward through the month to find this day, beginning with the days before the Nones, which take the Latin form \textit{ante diem\ldots Nonas}.  Note that 7 days are subtracted from the Ides in this calculation as a further consequence of inclusive counting.
+%    \begin{macrocode}
+    {
+      \int_compare:nNnTF {#3} < { \l_kal_month_ides_int - 8 }
+        {
+          \kal_day:n { \l_kal_month_ides_int - #3 - 7 }
+          \ \kal_abbr:nn {Nonas} {Non}
+          \ \kal_month:nn {\c_kal_month_acc_clist} {\l_kal_month_idx_int}
+        }
+%    \end{macrocode}
+% If the day is not before the Nones, it may be before the Ides and would take the Latin form \textit{ante diem\ldots Idus}.
+%    \begin{macrocode}
+        {
+          \int_compare:nNnTF {#3} < {\l_kal_month_ides_int}
+            {
+              \kal_day:n { \l_kal_month_ides_int - #3 + 1 }
+              \ \kal_abbr:nn {Idus} {Id}
+              \ \kal_month:nn {\c_kal_month_acc_clist} {\l_kal_month_idx_int}
+            }
+%    \end{macrocode}
+% If the day is before neither the Nones nor the Ides, it must reference the Kalends of the following month, taking the Latin form \textit{ante diem\ldots Kalendas}.  If it has been requested by the user, the \textit{bissextum} falls in this date span, so the month of February must be handled separately from all other dates.
+%    \begin{macrocode}
+            {
+              \bool_if:nTF
+                {
+                  \int_compare_p:nNn {\l_kal_month_idx_int} = {2} &&
+                  \l_kal_bissextum_bool
+                }
+                { \kal_bissextum_day:n {#3} }
+%    \end{macrocode}
+% Outside of special Februaries, these dates may be handled normally.  Note that two days are added to the specified day in calculation as a result of inclusive counting.
+%    \begin{macrocode}
+                {
+                  \kal_day:n { \l_kal_month_length_int - #3 + 2 }
+                }
+                \ \kal_abbr:nn {Kalendas} {Kal}
+%    \end{macrocode}
+% We must also handle the fact that the month following December is January, so the Kalends references of December dates will be in the first month.  For all other months, reference the next month.
+%    \begin{macrocode}
+                \ \int_compare:nNnTF {\l_kal_month_idx_int} = {12}
+                  { \kal_month:nn {\c_kal_month_acc_clist} {1} }
+                  {
+                    \kal_month:nn {\c_kal_month_acc_clist}
+                                  {\l_kal_month_idx_int + 1}
+                  }
+            }
+        }
+    }
+%    \end{macrocode}
+% \textbf{Rendering the year.}\quad The only portion of the date that remains to be rendered is the year, in the format specified in the \texttt{era} option.  If the era is not one of the ones listed below, the year is not displayed; the value \texttt{none} is suggested to the user to avoid unintended side-effects of utilising other values.
+%    \begin{macrocode}
+  \str_case_x:nn { \l_kal_era_tl }
+    {
+%    \end{macrocode}
+% The first date format we shall handle is the \textit{ab urbe condita} (\textsc{auc}) era, which measures years relative to the legendary founding of Rome in 753~\textsc{bce}.  As opposed to the other supported eras, \textit{ab urbe condita} has one peculiar quirk: while the \textit{anno Domini} and Common Era formats omit the year zero, \textit{ab urbe condita} continued through this year.  Thus, while the numeric difference between 1~\textsc{bce} and 1~\textsc{ce} is two years, the difference between these years \textit{ab urbe condita} is only one year.  To solve this problem, we can use different addends for dates before and after ``0~\textsc{ce}''.
+%    \begin{macrocode}
+      { auc } {
+        \ \KalYearFormat{
+          \int_compare:nNnTF {#1} < {0}
+            { \kal_year:n { #1 + 754 } }
+            { \kal_year:n { #1 + 753 } }
+        }
+        \ \kal_abbr:nn {ab\ urbe\ condita}
+            {\KalAbbrFormat{a \kal_period:n{} u \kal_period:n{} c}}
+        }
+%    \end{macrocode}
+% The \textit{anno Domini} era is significantly simpler, as its years are congruent with those used as input for this function.  If a date falls after ``0~\textsc{ce}'', it is classified in the \textit{anno Domini} (\textsc{ad}) era; if it falls before, it is \textit{ante Christum} (\textsc{ac}).
+%    \begin{macrocode}
+      { ad } {
+        \int_compare:nNnTF {#1} < {0}
+          {
+            \ \KalYearFormat{\kal_year:n {\int_abs:n {#1}}}
+            \ \kal_abbr:nn {ante\ Christum}
+                           {\KalAbbrFormat{a \kal_period:n{} c}}
+          }
+          {
+            \ \kal_abbr:nn {anno\ Domini}
+                           {\KalAbbrFormat{a \kal_period:n{} d}}
+            \ \KalYearFormat{\kal_year:n {#1}}
+          }
+        }
+%    \end{macrocode}
+% The \textit{anno}, or ``short \textsc{ad},'' pseudo-era is nearly identical, only replacing the phrase \textit{anno Domini} with the shorter \textit{anno} (\textsc{a}).
+%    \begin{macrocode}
+      { adshort } {
+        \int_compare:nNnTF {#1} < {0}
+          {
+            \ \KalYearFormat{\kal_year:n {\int_abs:n {#1}}}
+            \ \kal_abbr:nn {ante\ Christum}
+                           {\KalAbbrFormat{a \kal_period:n{} c}}
+          }
+          {
+            \ \kal_abbr:nn {anno} {\KalAbbrFormat{a}}
+            \ \KalYearFormat{\kal_year:n {#1}}
+          }
+        }
+%    \end{macrocode}
+% Finally, the Common Era (\textit{saeculum commune}) shares the same year numbers as the \textit{anno Domini} era, but uses different verbiage.
+%    \begin{macrocode}
+      { secular } {
+        \int_compare:nNnTF {#1} < {0}
+          {
+            \ \KalYearFormat{\kal_year:n {\int_abs:n {#1}}}
+            \ \kal_abbr:nn {ante\ saeculum\ commune}
+                {\KalAbbrFormat{a \kal_period:n{} s \kal_period:n{} c}}
+          }
+          {
+            \ \kal_abbr:nn {saeculo\ communi}
+                           {\KalAbbrFormat{s \kal_period:n{} c}}
+            \ \KalYearFormat{\kal_year:n {#1}}
+          }
+        }
+    }
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Rendering dates from strings}
+% \begin{variable}[internal]{\l_kal_date_year_int, \l_kal_date_month_int, \l_kal_date_day_int, \l_kal_date_split_seq, \l_kal_date_idx_int}
+% Begin by defining some scratch variables for the year, month, and day of the specified date; the date sequence after being split at the specified delimiters; and a loop index.
+%    \begin{macrocode}
+\int_new:N \l_kal_date_year_int
+\int_new:N \l_kal_date_month_int
+\int_new:N \l_kal_date_day_int
+\seq_new:N \l_kal_date_split_seq
+\int_new:N \l_kal_date_idx_int
+%    \end{macrocode}
+% \end{variable}
+% \begin{macro}[internal]{\kal_date_string:nnn}
+% To parse a date string (\verb|#3|), we must first determine the order in which the year, month, and day are arranged in the format string (\verb|#1|).  We begin by splitting the date string at the specified delimiter (\verb|#2|).
+%    \begin{macrocode}
+\cs_new:Npn \kal_date_string:nnn #1#2#3 {
+  \seq_set_split:Nnn \l_kal_date_split_seq {#2} {#3}
+%    \end{macrocode}
+% We now loop through the tokens in the format string, resolving each to one component of a fully-formed date.  For each successful match, we set the corresponding variable to the element of the split sequence at the same index.
+%    \begin{macrocode}
+  \int_set:Nn \l_kal_date_idx_int {1}
+  \int_do_until:nNnn {\l_kal_date_idx_int} = {4}
+    {
+      \str_case_x:nn {\tl_item:nn {#1} {\l_kal_date_idx_int}}
+        {
+          { Y } { \int_gset:Nn \l_kal_date_year_int
+                 { \seq_item:Nn \l_kal_date_split_seq {\l_kal_date_idx_int} } }
+          { M } { \int_gset:Nn \l_kal_date_month_int
+                 { \seq_item:Nn \l_kal_date_split_seq {\l_kal_date_idx_int} } }
+          { D } { \int_gset:Nn \l_kal_date_day_int
+                 { \seq_item:Nn \l_kal_date_split_seq {\l_kal_date_idx_int} } }
+        }
+      \int_incr:N \l_kal_date_idx_int
+    }
+%    \end{macrocode}
+% Finally, we render the date normally from these resolved components.
+%    \begin{macrocode}
+  \kal_date:nnn {\l_kal_date_year_int}
+                {\l_kal_date_month_int}
+                {\l_kal_date_day_int}
+}
+%    \end{macrocode}
+% To allow this command to be used with macro arguments, we shall create a variant that expands the date string once.
+%    \begin{macrocode}
+\cs_generate_variant:Nn \kal_date_string:nnn { nno }
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Determining weekdays of dates}
+% \begin{variable}[internal]{\l_kal_weekday_idx_int, \l_kal_weekday_month_int, \l_kal_weekday_year_int, \l_kal_weekday_century_int}
+% Begin by defining some scratch variables for the month, year, and zero-based century of the specified date, and a variable in which to store the weekday.
+%    \begin{macrocode}
+\int_new:N \l_kal_weekday_idx_int
+\int_new:N \l_kal_weekday_month_int
+\int_new:N \l_kal_weekday_year_int
+\int_new:N \l_kal_weekday_century_int
+%    \end{macrocode}
+% \end{variable}
+% \begin{macro}[internal]{\kal_weekday:nnn}
+% To determine the day of the week of an arbitrary date on either the Julian or Gregorian calendars, we shall use an implementation of Zeller's congruence.  For the Gregorian calendar, this arithmetic algorithm is as follows:
+% \[ w = \left(d + \left\lfloor\frac{13\left(m+1\right)}{5}\right\rfloor + K + \left\lfloor\frac{K}{4}\right\rfloor + \left\lfloor\frac{J}{4}\right\rfloor + 5J\right)\hspace{-0.75em}\mod 7 \]
+% \begin{itemize}
+%   \itemsep0em
+%   \item $w$ is the index of the day of the week, with Saturday at 0, Sunday at 1, Monday at 2, and so forth
+%   \item $d$ is the day of the month
+%   \item $m$ is the month, where all months follow their normal enumerations (March at 3, April at 4, etc.) except January and February, which are assigned indices 13 and 14, respectively
+%   \item $K$ is the year of the date within its century $\left(y \mod 100\right)$
+%   \item $J$ is the zero-based century of the year, $\left\lfloor\frac{y}{100}\right\rfloor$.
+% \end{itemize}
+% A similar formula exists for Julian dates:
+% \[ w = \left(d + \left\lfloor\frac{13\left(m+1\right)}{5}\right\rfloor + K + \left\lfloor\frac{K}{4}\right\rfloor + 5 + 6J\right)\hspace{-0.75em}\mod 7 \]
+% We begin our implementation by determining the index of the specified month.  Since we already need to add 12 to the indices of January and February, and the term $m$ only appears in the quantity $\left(m+1\right)$, we shall combine these additions from the start.
+%    \begin{macrocode}
+\cs_new:Npn \kal_weekday:nnn #1#2#3 {
+  \int_compare:nNnTF {#2} < {3}
+    { \int_set:Nn \l_kal_weekday_month_int { #2 + 13 } }
+    { \int_set:Nn \l_kal_weekday_month_int { #2 + 1 } }
+%    \end{macrocode}
+% We now determine the year of the century of the specified date, along with its zero-based century, according to the equations above.
+%    \begin{macrocode}
+  \int_set:Nn \l_kal_weekday_year_int { \int_mod:nn {#1} {100} }
+  \int_set:Nn \l_kal_weekday_century_int { \fp_eval:n { floor(#1 / 100) } }
+%    \end{macrocode}
+% Next, we shall implement the portions of the algorithm that are shared between the Julian and Gregorian calendars, calculating all like terms between the two.
+%    \begin{macrocode}
+  \int_set:Nn \l_kal_weekday_idx_int {#3}
+  \int_add:Nn \l_kal_weekday_idx_int
+                { \fp_eval:n { floor(13 * \l_kal_weekday_month_int / 5) } }
+  \int_add:Nn \l_kal_weekday_idx_int { \l_kal_weekday_year_int }
+  \int_add:Nn \l_kal_weekday_idx_int
+                { \fp_eval:n { floor(\l_kal_weekday_year_int / 4) } }
+%    \end{macrocode}
+% At this point, the algorithms diverge.  If the date has been specified as Julian, we shall use the $\cdots + 5 + 6J$ termination.
+%    \begin{macrocode}
+  \bool_if:nTF {\l_kal_julian_bool}
+    { \int_add:Nn \l_kal_weekday_idx_int { 5 + 6 * \l_kal_weekday_century_int } }
+%    \end{macrocode}
+% Otherwise, we shall use the more complex Gregorian termination.
+%    \begin{macrocode}
+    {
+      \int_add:Nn \l_kal_weekday_idx_int { \fp_eval:n
+          { 5 * \l_kal_weekday_century_int + floor(\l_kal_weekday_century_int / 4) }
+        }
+    }
+%    \end{macrocode}
+% Finally, we perform the modulus operation to reach an index value for the day of the week.  As Zeller's algorithm was designed for 0-indexed programming languages, we must add 1 to the index to compensate for \LaTeX3's 1-based indexing.
+%    \begin{macrocode}
+  \int_set:Nn \l_kal_weekday_idx_int { \int_mod:nn {\l_kal_weekday_idx_int} {7} }
+  \int_incr:N \l_kal_weekday_idx_int
+%    \end{macrocode}
+% We can now fetch the appropriate form of the weekday from the lookup lists.
+%    \begin{macrocode}
+  \kal_abbr:nn
+    { \clist_item:Nn \c_kal_weekday_gen_clist { \l_kal_weekday_idx_int } }
+    { \clist_item:Nn \c_kal_weekday_abbr_clist { \l_kal_weekday_idx_int } }
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{User-facing macros}
+% \begin{macro}{\KalDate}
+% Render a Roman calendar date for the specified year (\verb|#2|), month (\verb|#3|), and day (\verb|#4|) with the specified options (\verb|#1|).
+%    \begin{macrocode}
+\DeclareDocumentCommand{\KalDate}{o m m m}
+  {
+    \IfValueTF{#1}
+      {
+        \group_begin:
+          \keys_set:nn {kalendarium} {#1}
+          \kal_date:nnn {#2} {#3} {#4}
+        \group_end:
+      }
+      { \kal_date:nnn {#2} {#3} {#4} }
+  }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\KalDateStr}
+% Convert the specified date string (\verb|#4|), with components in the order of the format string (\verb|#2|) and delimited by a consistent value (\verb|#3|), to a Roman calendar date with the specified options (\verb|#1|).  To avoid user confusion, the date string is always expanded.
+%    \begin{macrocode}
+\DeclareDocumentCommand{\KalDateStr}{o m m m}
+  {
+    \IfValueTF{#1}
+      {
+        \group_begin:
+          \keys_set:nn {kalendarium} {#1}
+          \kal_date_string:nno {#2} {#3} {#4}
+        \group_end:
+      }
+      { \kal_date_string:nno {#2} {#3} {#4} }
+  }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\KalToday}
+% Render the Roman calendar date for the current date with the specified options (\verb|#1|).
+%    \begin{macrocode}
+\DeclareDocumentCommand{\KalToday}{o}
+  {
+    \IfValueTF{#1}
+      {
+        \group_begin:
+          \keys_set:nn {kalendarium} {#1}
+          \kal_date:nnn {\the\year} {\the\month} {\the\day}
+        \group_end:
+      }
+      { \kal_date:nnn {\the\year} {\the\month} {\the\day} }
+  }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\KalWeekday}
+% Determine the Latin day of the week for the specified year (\verb|#2|), month (\verb|#3|), and day (\verb|#4|) with the specified options (\verb|#1|).
+%    \begin{macrocode}
+\DeclareDocumentCommand{\KalWeekday}{o m m m}
+  {
+    \IfValueTF{#1}
+      {
+        \group_begin:
+          \keys_set:nn {kalendarium} {#1}
+          \kal_weekday:nnn {#2} {#3} {#4}
+        \group_end:
+      }
+      { \kal_weekday:nnn {#2} {#3} {#4} }
+  }
+%    \end{macrocode}
+%    \begin{macrocode}
+\ExplSyntaxOff
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\KalAbbrFormat, \KalDayFormat, \KalYearFormat}
+% Commands to control the formatting of abbreviations, days, and years, respectively, in Roman calendar dates.  The user is encouraged to override these commands to fit their particular \ae sthetic goals.
+%    \begin{macrocode}
+\newcommand{\KalAbbrFormat}[1]{\textsc{#1}}
+\newcommand{\KalDayFormat}[1]{\MakeUppercase{#1}}
+\newcommand{\KalYearFormat}[1]{\MakeUppercase{#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+%</package>
+%    \end{macrocode}
+% \end{implementation}
+%
+% \PrintIndex
+%\Finale
