@@ -1,0 +1,406 @@
+%%
+%% This is file `kalendarium.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% kalendarium.dtx  (with options: `package')
+%% ----------------------------------------------------------------
+%% kalendarium --- Format dates according to the Roman calendar
+%% E-mail: aws@awsmith.us
+%% Released under the LaTeX Project Public License v1.3c or later
+%% See http://www.latex-project.org/lppl.txt
+%% ----------------------------------------------------------------
+%% 
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{kalendarium}[2018/06/14 1.0 Format dates using the Roman calendar]
+\RequirePackage{xparse}
+\RequirePackage{l3keys2e}
+\ProvidesExplPackage
+  {kalendarium}
+  {2018-06-17}{1.0}
+  {A package to display dates in the classical Roman style}
+\ExplSyntaxOn
+\keys_define:nn {kalendarium}{
+  abbreviate .bool_set:N = \l_kal_abbreviate_bool,
+  abbreviate .initial:n  = { false },
+  periods    .bool_set:N = \l_kal_periods_bool,
+  periods    .initial:n  = { true },
+  era        .tl_set:N   = \l_kal_era_tl,
+  era        .initial:n  = { ad },
+  julian     .bool_set:N = \l_kal_julian_bool,
+  julian     .initial:n  = { false },
+  dayfmt     .tl_set:N   = \l_kal_dayfmt_tl,
+  dayfmt     .initial:n  = { roman },
+  yearfmt    .tl_set:N   = \l_kal_yearfmt_tl,
+  yearfmt    .initial:n  = { roman },
+  antediem   .bool_set:N = \l_kal_antediem_bool,
+  antediem   .initial:n  = { true },
+  bissextum  .bool_set:N = \l_kal_bissextum_bool,
+  bissextum  .initial:n  = { true },
+  oldmonths  .bool_set:N = \l_kal_oldmonths_bool,
+  oldmonths  .initial:n  = { false }
+}
+\ProcessKeysOptions {kalendarium}
+\clist_new:N  \c_kal_day_acc_clist
+\clist_set:Nn \c_kal_day_acc_clist {
+  primum,secundum,tertium,quartum,quintum,sextum,septimum,octavum,nonum,decimum,
+  undecimum,duodecimum,tertium\ decimum,quartum\ decimum,quintum\ decimum,
+  sextum\ decimum,septimum\ decimum,duodevicesimum,undevicesimum,bissextum
+}
+\clist_new:N  \c_kal_day_abl_clist
+\clist_set:Nn \c_kal_day_abl_clist {
+  primo,secundo,tertio,quarto,quinto,sexto,septimo,octavo,nono,decimo,
+  undecimo,duodecimo,tertio\ decimo,quarto\ decimo,quinto\ decimo,
+  sexto\ decimo,septimo\ decimo,duodevicesimo,undevicesimo,bissexto
+}
+\clist_new:N  \c_kal_weekday_gen_clist
+\clist_set:Nn \c_kal_weekday_gen_clist {
+  Saturni,Solis,Lunae,Martis,Mercurii,Iovis,Veneris
+}
+\clist_new:N  \c_kal_weekday_abbr_clist
+\clist_set:Nn \c_kal_weekday_abbr_clist {
+  Sat,Sol,Lun,Mart,Merc,Iov,Ven
+}
+\clist_new:N  \c_kal_month_acc_clist
+\clist_set:Nn \c_kal_month_acc_clist {
+  Ianuarias,Februarias,Martias,Apriles,Maias,Iunias,Iulias,Augustas,
+  Septembres,Octobres,Novembres,Decembres,Quintiles,Sextiles,Augustas
+}
+\clist_new:N  \c_kal_month_abl_clist
+\clist_set:Nn \c_kal_month_abl_clist {
+  Ianuariis,Februariis,Martiis,Aprilibus,Maiis,Iuniis,Iuliis,
+  Augustis,Septembribus,Octobribus,Novembribus,Decembribus,
+  Quintilibus,Sextilibus,Augustis
+}
+\clist_new:N  \c_kal_month_abbr_clist
+\clist_set:Nn \c_kal_month_abbr_clist {
+  Ian,Feb,Mar,Apr,Mai,Iun,Iul,Aug,Sept,Oct,Nov,Dec,Quin,Sex,Aug
+}
+\clist_new:N  \c_kal_month_lengths_clist
+\clist_set:Nn \c_kal_month_lengths_clist {
+  31,28,31,30,31,30,31,31,30,31,30,31,31,31
+}
+\clist_new:N  \c_kal_month_ides_clist
+\clist_set:Nn \c_kal_month_ides_clist {
+  13,13,15,13,15,13,15,13,13,15,13,13,15,13
+}
+\cs_new:Nn \kal_period:n {
+  \bool_if:NT \l_kal_periods_bool {.}
+}
+\cs_new:Npn \kal_abbr:nn #1#2 {
+  \bool_if:NTF \l_kal_abbreviate_bool {#2 \kal_period:n{}} {#1}
+}
+\cs_new:Npn \kal_month:nn #1#2 {
+  \kal_abbr:nn
+    { \clist_item:Nn {#1} {#2} }
+    { \clist_item:Nn \c_kal_month_abbr_clist {#2} }
+}
+\cs_new:Npn \kal_ante_diem:nn #1#2 {
+  \bool_if:nTF {\l_kal_antediem_bool}
+    {
+      \kal_abbr:nn {ante\ diem} {\KalAbbrFormat{a \kal_period:n{} d}}
+      \ \int_compare:nNnTF {#2} = {1}
+          { \clist_item:Nn \c_kal_day_acc_clist {#1} }
+          { #1 }
+    }
+    {
+      \int_compare:nNnTF {#2} = {1}
+        { \clist_item:Nn \c_kal_day_abl_clist {#1} }
+        { #1 }
+    }
+}
+\cs_new:Npn \kal_day:n #1 {
+  \int_compare:nNnTF {#1} = {2}
+    { \kal_abbr:nn {pridie} {prid} }
+    {
+      \str_case_x:nnF { \l_kal_dayfmt_tl }
+        {
+          { latin }  { \kal_ante_diem:nn {#1} {1} }
+          { roman }  { \kal_ante_diem:nn {\KalDayFormat{
+                                            \int_to_roman:n {#1}}} {0} }
+          { arabic } { \kal_ante_diem:nn {\int_eval:n {#1}} {0} }
+        }
+        { \kal_ante_diem:nn {\KalDayFormat{\int_to_roman:n {#1}}} {0} }
+    }
+}
+\cs_new:Npn \kal_bissextum_day:n #1 {
+  \int_compare:nNnTF {#1} < {24}
+    { \kal_day:n { \l_kal_month_length_int - #1 + 1 } }
+    {
+      \int_compare:nNnTF {#1} > {24}
+        { \kal_day:n { \l_kal_month_length_int - #1 + 2 } }
+        {
+          \str_case_x:nnF { \l_kal_dayfmt_tl }
+            {
+              { latin }  { \kal_ante_diem:nn {20} {1} }
+              { roman }  { \kal_ante_diem:nn {bis\ \KalDayFormat{vi} } {0} }
+              { arabic } { \kal_ante_diem:nn {bis\ \KalDayFormat{6} } {0} }
+            }
+            { \kal_ante_diem:nn {bis\ \KalDayFormat{vi} } {0} }
+        }
+    }
+}
+\cs_new:Npn \kal_year:n #1 {
+  \KalYearFormat{
+    \str_case_x:nnF { \l_kal_yearfmt_tl }
+      {
+        { roman }  { \int_to_roman:n {#1} }
+        { arabic } { \int_eval:n {#1} }
+      }
+      { \int_to_roman:n {#1} }
+  }
+}
+\int_new:N \l_kal_month_idx_int
+\int_new:N \l_kal_month_length_int
+\int_new:N \l_kal_month_ides_int
+\cs_new:Npn \kal_date:nnn #1#2#3 {
+  \bool_if:nTF {\l_kal_oldmonths_bool}
+    {
+      \int_case:nnF {#2}
+        {
+          {7} { \int_set:Nn \l_kal_month_idx_int {13} }
+          {8} { \int_set:Nn \l_kal_month_idx_int {14} }
+        }
+        { \int_set:Nn \l_kal_month_idx_int {#2} }
+    }
+    { \int_set:Nn \l_kal_month_idx_int {#2} }
+  \int_compare:nNnTF {\l_kal_month_idx_int} = {2}
+    {
+      \int_compare:nNnTF { \int_mod:nn {#1} {4} } = {0}
+        {
+          \bool_if:nTF
+            {
+              \l_kal_julian_bool ||
+              \int_compare_p:n { \int_mod:nn {#1} {100} != 0 }
+            }
+            { \int_set:Nn \l_kal_month_length_int {29} }
+            {
+              \int_compare:nNnTF { \int_mod:nn {#1} {400} } = {0}
+                { \int_set:Nn \l_kal_month_length_int {29} }
+                { \int_set:Nn \l_kal_month_length_int {28} }
+            }
+        }
+        { \int_set:Nn \l_kal_month_length_int {28} }
+    }
+    {
+      \int_set:Nn \l_kal_month_length_int
+        { \clist_item:Nn \c_kal_month_lengths_clist {\l_kal_month_idx_int} }
+    }
+  \int_set:Nn \l_kal_month_ides_int
+    { \clist_item:Nn \c_kal_month_ides_clist {\l_kal_month_idx_int} }
+  \int_case:nnTF {#3}
+    {
+      { 1 }                         { \kal_abbr:nn {Kalendis} {Kal} }
+      { \l_kal_month_ides_int - 8 } { \kal_abbr:nn {Nonis}    {Non} }
+      { \l_kal_month_ides_int }     { \kal_abbr:nn {Idibus}   {Id}  }
+    }
+    { \ \kal_month:nn {\c_kal_month_abl_clist} {\l_kal_month_idx_int} }
+    {
+      \int_compare:nNnTF {#3} < { \l_kal_month_ides_int - 8 }
+        {
+          \kal_day:n { \l_kal_month_ides_int - #3 - 7 }
+          \ \kal_abbr:nn {Nonas} {Non}
+          \ \kal_month:nn {\c_kal_month_acc_clist} {\l_kal_month_idx_int}
+        }
+        {
+          \int_compare:nNnTF {#3} < {\l_kal_month_ides_int}
+            {
+              \kal_day:n { \l_kal_month_ides_int - #3 + 1 }
+              \ \kal_abbr:nn {Idus} {Id}
+              \ \kal_month:nn {\c_kal_month_acc_clist} {\l_kal_month_idx_int}
+            }
+            {
+              \bool_if:nTF
+                {
+                  \int_compare_p:nNn {\l_kal_month_idx_int} = {2} &&
+                  \l_kal_bissextum_bool
+                }
+                { \kal_bissextum_day:n {#3} }
+                {
+                  \kal_day:n { \l_kal_month_length_int - #3 + 2 }
+                }
+                \ \kal_abbr:nn {Kalendas} {Kal}
+                \ \int_compare:nNnTF {\l_kal_month_idx_int} = {12}
+                  { \kal_month:nn {\c_kal_month_acc_clist} {1} }
+                  {
+                    \kal_month:nn {\c_kal_month_acc_clist}
+                                  {\l_kal_month_idx_int + 1}
+                  }
+            }
+        }
+    }
+  \str_case_x:nn { \l_kal_era_tl }
+    {
+      { auc } {
+        \ \KalYearFormat{
+          \int_compare:nNnTF {#1} < {0}
+            { \kal_year:n { #1 + 754 } }
+            { \kal_year:n { #1 + 753 } }
+        }
+        \ \kal_abbr:nn {ab\ urbe\ condita}
+            {\KalAbbrFormat{a \kal_period:n{} u \kal_period:n{} c}}
+        }
+      { ad } {
+        \int_compare:nNnTF {#1} < {0}
+          {
+            \ \KalYearFormat{\kal_year:n {\int_abs:n {#1}}}
+            \ \kal_abbr:nn {ante\ Christum}
+                           {\KalAbbrFormat{a \kal_period:n{} c}}
+          }
+          {
+            \ \kal_abbr:nn {anno\ Domini}
+                           {\KalAbbrFormat{a \kal_period:n{} d}}
+            \ \KalYearFormat{\kal_year:n {#1}}
+          }
+        }
+      { adshort } {
+        \int_compare:nNnTF {#1} < {0}
+          {
+            \ \KalYearFormat{\kal_year:n {\int_abs:n {#1}}}
+            \ \kal_abbr:nn {ante\ Christum}
+                           {\KalAbbrFormat{a \kal_period:n{} c}}
+          }
+          {
+            \ \kal_abbr:nn {anno} {\KalAbbrFormat{a}}
+            \ \KalYearFormat{\kal_year:n {#1}}
+          }
+        }
+      { secular } {
+        \int_compare:nNnTF {#1} < {0}
+          {
+            \ \KalYearFormat{\kal_year:n {\int_abs:n {#1}}}
+            \ \kal_abbr:nn {ante\ saeculum\ commune}
+                {\KalAbbrFormat{a \kal_period:n{} s \kal_period:n{} c}}
+          }
+          {
+            \ \kal_abbr:nn {saeculo\ communi}
+                           {\KalAbbrFormat{s \kal_period:n{} c}}
+            \ \KalYearFormat{\kal_year:n {#1}}
+          }
+        }
+    }
+}
+\int_new:N \l_kal_date_year_int
+\int_new:N \l_kal_date_month_int
+\int_new:N \l_kal_date_day_int
+\seq_new:N \l_kal_date_split_seq
+\int_new:N \l_kal_date_idx_int
+\cs_new:Npn \kal_date_string:nnn #1#2#3 {
+  \seq_set_split:Nnn \l_kal_date_split_seq {#2} {#3}
+  \int_set:Nn \l_kal_date_idx_int {1}
+  \int_do_until:nNnn {\l_kal_date_idx_int} = {4}
+    {
+      \str_case_x:nn {\tl_item:nn {#1} {\l_kal_date_idx_int}}
+        {
+          { Y } { \int_gset:Nn \l_kal_date_year_int
+                 { \seq_item:Nn \l_kal_date_split_seq {\l_kal_date_idx_int} } }
+          { M } { \int_gset:Nn \l_kal_date_month_int
+                 { \seq_item:Nn \l_kal_date_split_seq {\l_kal_date_idx_int} } }
+          { D } { \int_gset:Nn \l_kal_date_day_int
+                 { \seq_item:Nn \l_kal_date_split_seq {\l_kal_date_idx_int} } }
+        }
+      \int_incr:N \l_kal_date_idx_int
+    }
+  \kal_date:nnn {\l_kal_date_year_int}
+                {\l_kal_date_month_int}
+                {\l_kal_date_day_int}
+}
+\cs_generate_variant:Nn \kal_date_string:nnn { nno }
+\int_new:N \l_kal_weekday_idx_int
+\int_new:N \l_kal_weekday_month_int
+\int_new:N \l_kal_weekday_year_int
+\int_new:N \l_kal_weekday_century_int
+\cs_new:Npn \kal_weekday:nnn #1#2#3 {
+  \int_compare:nNnTF {#2} < {3}
+    { \int_set:Nn \l_kal_weekday_month_int { #2 + 13 } }
+    { \int_set:Nn \l_kal_weekday_month_int { #2 + 1 } }
+  \int_set:Nn \l_kal_weekday_year_int { \int_mod:nn {#1} {100} }
+  \int_set:Nn \l_kal_weekday_century_int { \fp_eval:n { floor(#1 / 100) } }
+  \int_set:Nn \l_kal_weekday_idx_int {#3}
+  \int_add:Nn \l_kal_weekday_idx_int
+                { \fp_eval:n { floor(13 * \l_kal_weekday_month_int / 5) } }
+  \int_add:Nn \l_kal_weekday_idx_int { \l_kal_weekday_year_int }
+  \int_add:Nn \l_kal_weekday_idx_int
+                { \fp_eval:n { floor(\l_kal_weekday_year_int / 4) } }
+  \bool_if:nTF {\l_kal_julian_bool}
+    { \int_add:Nn \l_kal_weekday_idx_int { 5 + 6 * \l_kal_weekday_century_int } }
+    {
+      \int_add:Nn \l_kal_weekday_idx_int { \fp_eval:n
+          { 5 * \l_kal_weekday_century_int + floor(\l_kal_weekday_century_int / 4) }
+        }
+    }
+  \int_set:Nn \l_kal_weekday_idx_int { \int_mod:nn {\l_kal_weekday_idx_int} {7} }
+  \int_incr:N \l_kal_weekday_idx_int
+  \kal_abbr:nn
+    { \clist_item:Nn \c_kal_weekday_gen_clist { \l_kal_weekday_idx_int } }
+    { \clist_item:Nn \c_kal_weekday_abbr_clist { \l_kal_weekday_idx_int } }
+}
+\DeclareDocumentCommand{\KalDate}{o m m m}
+  {
+    \IfValueTF{#1}
+      {
+        \group_begin:
+          \keys_set:nn {kalendarium} {#1}
+          \kal_date:nnn {#2} {#3} {#4}
+        \group_end:
+      }
+      { \kal_date:nnn {#2} {#3} {#4} }
+  }
+\DeclareDocumentCommand{\KalDateStr}{o m m m}
+  {
+    \IfValueTF{#1}
+      {
+        \group_begin:
+          \keys_set:nn {kalendarium} {#1}
+          \kal_date_string:nno {#2} {#3} {#4}
+        \group_end:
+      }
+      { \kal_date_string:nno {#2} {#3} {#4} }
+  }
+\DeclareDocumentCommand{\KalToday}{o}
+  {
+    \IfValueTF{#1}
+      {
+        \group_begin:
+          \keys_set:nn {kalendarium} {#1}
+          \kal_date:nnn {\the\year} {\the\month} {\the\day}
+        \group_end:
+      }
+      { \kal_date:nnn {\the\year} {\the\month} {\the\day} }
+  }
+\DeclareDocumentCommand{\KalWeekday}{o m m m}
+  {
+    \IfValueTF{#1}
+      {
+        \group_begin:
+          \keys_set:nn {kalendarium} {#1}
+          \kal_weekday:nnn {#2} {#3} {#4}
+        \group_end:
+      }
+      { \kal_weekday:nnn {#2} {#3} {#4} }
+  }
+\ExplSyntaxOff
+\newcommand{\KalAbbrFormat}[1]{\textsc{#1}}
+\newcommand{\KalDayFormat}[1]{\MakeUppercase{#1}}
+\newcommand{\KalYearFormat}[1]{\MakeUppercase{#1}}
+%% 
+%% Copyright (C) 2018 by Andrew Smith <aws@awsmith.us>
+%% 
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License (LPPL), either
+%% version 1.3c of this license or (at your option) any later
+%% version.  The latest version of this license is in the file:
+%% 
+%% http://www.latex-project.org/lppl.txt
+%% 
+%% This work is "maintained" (as per LPPL maintenance status) by
+%% Andrew Smith.
+%% 
+%% This work consists of the file  kalendarium.dtx
+%% and the derived files           kalendarium.ins,
+%%                                 kalendarium.pdf and
+%%                                 kalendarium.sty.
+%% 
+%%
+%% End of file `kalendarium.sty'.
